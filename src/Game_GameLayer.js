@@ -1,5 +1,6 @@
 var GameLayer = cc.Layer.extend({
     die: false,
+    winlose: false,
     ctor: function () {
         this._super();
         this.init();
@@ -48,10 +49,12 @@ var GameLayer = cc.Layer.extend({
         }
         realMap(this);
         creatCrepp(this);
-        creatItem(this);
+        // creatItem(this);
         creatRandomItem(this);
-        this._player = new Player(250, 120);
+        this._player = new Player(250, 120,this);
         this.addChild(this._player);
+        // this.addChild(this._player.pressZ(this._player.getPosition()));
+
 
         this._score = new LayerScore();
         this.addChild(this._score);
@@ -63,7 +66,7 @@ var GameLayer = cc.Layer.extend({
 
         var cancel = new ccui.Button();
         cancel.loadTextures(res.BtnCancel_png, res.BtnCancel2_png);
-        cancel.x = size.width -50 ;
+        cancel.x = size.width - 50;
         cancel.y = 50;
         cancel.addTouchEventListener(this.touchExit, this);
         this.addChild(cancel);
@@ -79,101 +82,136 @@ var GameLayer = cc.Layer.extend({
         }
     },
     update: function (dt) {
-        //cap nhat diem
-        this._score.update(dt);
-        this._score.countBomLB.setString(this._player.MaxBomb.toString());
-        this._score.countSpeedLB.setString(this._player.speed.toString());
-        this._score.countKillBossLB.setString(this._player.Score.toString());
-        this._score.kimLB.setString(this._player.Kim.toString());
 
-        for (var i = 0; i < arrCreeps.length; i++) {
-            arrCreeps[i].update(dt);
-        }
-        //datBomb
-        if (KEYS[cc.KEY.space]) {
-            this.creatbomb();
-            KEYS[cc.KEY.space] = false;
-        }
-        arrBosss[0].update(dt);
-        for (var j = 0; j < arrBooms.length; j++) {
-            arrBooms[j].update(dt);
+        if (this.winlose == false) {
+            this._score.update(dt);
+            this._score.countBomLB.setString(this._player.MaxBomb.toString());
+            this._score.countSpeedLB.setString(this._player.speed.toString());
+            this._score.countKillBossLB.setString(this._player.Score.toString());
+            this._score.kimLB.setString(this._player.Kim.toString());
+            this._score.playerLiveLB.setString(this._player.Live.toString());
+            //dieu kien thang
+            if (this._boss.active == false) {
+                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
+                this.winlose.activelose = true;
+                this.winlose = true;
+                // var scene = new GameMenuHighScore;
+                // cc.director.pushScene(new cc.TransitionFade(5, scene));
+            }
+            if (this._player.Live == 0) {
+                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
+                this.winlose.activelose = true;
+                this.winlose = true;
+                // var scene = new GameMenuHighScore;
+                // cc.director.pushScene(new cc.TransitionFade(5, scene));
+            }
+            for (var i = 0; i < arrCreeps.length; i++) {
+                arrCreeps[i].update(dt);
+            }
+            //datBomb
+            if (KEYS[cc.KEY.space]) {
+                this.creatbomb();
+                KEYS[cc.KEY.space] = false;
+            }
+            //update boss
+            arrBosss[0].update(dt);
+            //update boom
+            for (var j = 0; j < arrBooms.length; j++) {
+                arrBooms[j].update(dt);
+                arrBooms[j].bomwave(this._player.BombSize, arrMap1s);
+            }
 
-
-        }
-
-        //phá thùng
-        for (var k = 0; k < arrMap1s.length; k++) {
-            if (arrMap1s[k].visible && arrMap1s[k].getTag() == 4) {
-                for (var i = 0; i < arrBooms.length; i++) {
-                    if (arrBooms[i].BomDown.visible) {
-                        if (arrBooms[i].checkbom(arrBooms[i].getPosition(), arrMap1s[k]) == false) {
-                            arrMap1s[k].setVisible(false);
+            //phá thùng
+            for (var k = 0; k < arrMap1s.length; k++) {
+                if (arrMap1s[k].visible && arrMap1s[k].getTag() == 4) {
+                    for (var i = 0; i < arrBooms.length; i++) {
+                        if (arrBooms[i].BomDown.visible) {
+                            if (arrBooms[i].checkbom(arrBooms[i].getPosition(), arrMap1s[k]) == false) {
+                                arrMap1s[k].setVisible(false);
+                            }
                         }
                     }
                 }
             }
-        }
-        //killbosss
-        for (var i = 0; i < arrBooms.length; i++) {
-            if (arrBooms[i].BomDown.visible) {
-                for (var j = 0; j < arrCreeps.length; j++) {
-                    if (arrCreeps[j].active) {
-                        if (arrBooms[i].checkbom(arrBooms[i].getPosition(), arrCreeps[j]) == false) {
-                            arrCreeps[j].destroy();
+            //killbosss
+            for (var i = 0; i < arrBooms.length; i++) {
+                if (arrBooms[i].BomDown.visible) {
+                    for (var j = 0; j < arrCreeps.length; j++) {
+                        if (arrCreeps[j].active) {
+                            if (arrBooms[i].checkbom(arrBooms[i].getPosition(), arrCreeps[j]) == false) {
+                                arrCreeps[j].destroy();
+                                this._player.Score += 10;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //playercheckBomb
+            for (var i = 0; i < arrBooms.length; i++) {
+                if (arrBooms[i].BomDown.visible) {
+                    if (arrBooms[i].checkbom(arrBooms[i].getPosition(), this._player) == false) {
+                        this._player.saxNuoc();
+                    }
+                }
+            }
+            //playercheckdie
+            for (var i=0;i<arrCreeps.length;i++){
+                if (arrCreeps[i].active){
+                    if (this.collide(this._player,arrCreeps[i])){
+                        this._player.Live-=1;
+                        this._player.setOpacity(0);
+                        this._player.setPosition(340,120);
+                        var BossDie = cc.FadeIn.create(1);
+                        this._player.runAction(BossDie);
+                    }
+                }
+            }
+            //item
+            for (var i = 0; i < arrItems.length; i++) {
+                if (arrItems[i].active) {
+                    if (this.collide(arrItems[i], this._player)) {
+                        if (arrItems[i].getTag() == 2) {
+                            this._score.realTime = 3;
+                            this._player.speed += 1;
+                        }
+                        if (arrItems[i].getTag() == 1) {
+                            this._player.MaxBomb += 1;
+                        }
+                        if (arrItems[i].getTag() == 3) {
+                            if (this._player.BombSize<=10);{
+                                this._player.BombSize += 1;
+                            }
+
+                        }
+                        arrItems[i].destroy();
+                    }
+                }
+            }
+
+            //Bosshit
+            for (var i = 0; i < arrBooms.length; i++) {
+                if (arrBooms[i].BomDown.visible) {
+                    if (arrBooms[i].checkbom(arrBooms[i].getPosition(), this._boss) == false && arrBooms[i].hitBoss == true) {
+                        if (this._boss.countHeartBoss > 0) {
+                            this._boss.arrheart[this._boss.countHeartBoss - 1].setVisible(false);
+                            this._boss.countHeartBoss -= 1;
+                            this._boss.setOpacity(0);
+                            var BossDie = cc.FadeIn.create(0.3);
+                            this._boss.runAction(BossDie);
                             this._player.Score += 10;
                         }
-                    }
-                }
-            }
-        }
+                        if (this._boss.countHeartBoss == 0) {
+                            this._boss.destroy();
 
-        //playercheckBomb
-        for (var i = 0; i < arrBooms.length; i++) {
-            if (arrBooms[i].BomDown.visible) {
-                if (arrBooms[i].checkbom(arrBooms[i].getPosition(), this._player) == false) {
-                    this._player.saxNuoc();
+                        }
+                        arrBooms[i].hitBoss = false;
+                    }
                 }
             }
         }
-        //item
-        for (var i = 0; i < arrItems.length; i++) {
-            if (arrItems[i].active) {
-                if (this.collide(arrItems[i], this._player)) {
-                    if (arrItems[i].getTag() == 2) {
-                        this._score.realTime = 3;
-                        this._player.speed += 1;
-                    }
-                    if (arrItems[i].getTag() == 1) {
-                        this._player.MaxBomb += 1;
-                    }
-                    if (arrItems[i].getTag() == 3) {
-                        this._player.BombSize += 1;
-                    }
-                    arrItems[i].destroy();
-                }
-            }
-        }
+        //cap nhat diem
 
-        //Bosshit
-        for (var i = 0; i < arrBooms.length; i++) {
-            if (arrBooms[i].BomDown.visible) {
-                if (arrBooms[i].checkbom(arrBooms[i].getPosition(), this._boss) == false && arrBooms[i].hitBoss == true) {
-                    if (this._boss.countHeartBoss > 0) {
-                        this._boss.arrheart[this._boss.countHeartBoss - 1].setVisible(false);
-                        this._boss.countHeartBoss -= 1;
-                        this._boss.setOpacity(0);
-                        var BossDie = cc.FadeIn.create(0.3);
-                        this._boss.runAction(BossDie);
-                        this._player.Score += 10;
-                    }
-                    if (this._boss.countHeartBoss == 0) {
-                        this._boss.destroy();
-
-                    }
-                    arrBooms[i].hitBoss = false;
-                }
-            }
-        }
     },
     creatbomb: function () {
 
@@ -199,8 +237,8 @@ var GameLayer = cc.Layer.extend({
             if (count < this._player.MaxBomb) {
                 var point = this._player.getPosition();
                 var bomb = new Bomb(point.x, point.y, this, this._player.BombSize);
-                bomb.bomwave(this._player.BombSize, arrMap1s);
                 arrBooms.push(bomb);
+
             }
         }
     },
@@ -212,7 +250,7 @@ var GameLayer = cc.Layer.extend({
         return cc.rectIntersectsRect(aRect, bRect);
     }
 });
-creatRandomItem = function (game) {
+    creatRandomItem = function (game) {
     var count = arrLocalItem.length;
     for (var k = 0; k < 20; k++) {
         var n = Math.floor(Math.random() * count);
@@ -260,28 +298,7 @@ creatRandomItem = function (game) {
         game.addChild(creep6);
         game.addChild(creep7);
     },
-    creatItem = function (game) {
 
-        var item = new Items(385, 255);
-        var item2 = new Items(430, 255);
-        var item3 = new Items(475, 255);
-        var item4 = new Items(520, 255);
-        var item5 = new Items(565, 255);
-        var item6 = new Items(205, 120);
-        game.addChild(item6);
-        game.addChild(item);
-        game.addChild(item2);
-        game.addChild(item3);
-        game.addChild(item4);
-        game.addChild(item5);
-        arrItems.push(item6);
-        arrItems.push(item);
-        arrItems.push(item2);
-        arrItems.push(item3);
-        arrItems.push(item4);
-        arrItems.push(item5);
-
-    },
     GameLayer.scene = function () {
         var scene = new cc.Scene();
         var layer = new GameLayer();

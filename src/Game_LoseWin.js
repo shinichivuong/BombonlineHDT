@@ -3,7 +3,7 @@ var LayerWinLose= cc.Layer.extend({
     activewin:false,
     activelose:false,
 
-    ctor : function (game,size) {
+    ctor : function (game,size,playername,score) {
         cc.audioEngine.playMusic(res.sound_win);
 
         var staticGame = new cc.LabelTTF("VICTORY");
@@ -15,7 +15,7 @@ var LayerWinLose= cc.Layer.extend({
         game.addChild(staticGame);
 
 
-        var player = new cc.LabelTTF("User Name:" );
+        var player = new cc.LabelTTF("User Name:"+playername );
         player.setAnchorPoint(cc.p(0.5, 0.5));
         player.setFontSize(20);
         player.setLocalZOrder(5);
@@ -23,7 +23,7 @@ var LayerWinLose= cc.Layer.extend({
         player.setColor(cc.color(0, 0, 0));
         game.addChild(player);
 
-        var score = new cc.LabelTTF("Score: ");
+        var score = new cc.LabelTTF("Score: " +score);
         score.setFontSize(20);
         score.setAnchorPoint(cc.p(0.5, 0.5));
         score.setLocalZOrder(5);

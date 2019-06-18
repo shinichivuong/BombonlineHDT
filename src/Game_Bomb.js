@@ -7,10 +7,14 @@ var Bomb = cc.Sprite.extend({
     sizebom: 0,
     hitBoss: true,
     active: true,
+    sizeleft:0,
+    sizeright:0,
+    sizeup:0,
+    sizedown:0,
+
     ctor: function (x, y, game, sizebomb) {
         this._super();
         if (this.active) {
-            this.sizebom = sizebomb;
             x = this.changePointX(x);
             y = this.changePointY(y);
             cc.associateWithNative(this, cc.Sprite);
@@ -20,27 +24,27 @@ var Bomb = cc.Sprite.extend({
             this.setAnchorPoint(cc.p(0.5, 0.5));
             game.addChild(this);
             //bomleft
-            this.BomLeft = cc.Sprite.create("res/Bomb/bombbang_left" + this.sizebom + ".png");
+            this.BomLeft = cc.Sprite.create("res/Bomb/bombbang_left" + sizebomb + ".png");
             this.BomLeft.setAnchorPoint(cc.p(1, 0.5));
-            this.BomLeft.setPosition(x, y);
+            this.BomLeft.setPosition(x+22, y);
             this.BomLeft.setVisible(false);
             game.addChild(this.BomLeft);
             //bỏmight
-            this.BomRight = cc.Sprite.create("res/Bomb/bombbang_right" + this.sizebom + ".png");
+            this.BomRight = cc.Sprite.create("res/Bomb/bombbang_right" + sizebomb + ".png");
             this.BomRight.setAnchorPoint(cc.p(0, 0.5));
-            this.BomRight.setPosition(x, y);
+            this.BomRight.setPosition(x-22, y);
             this.BomRight.setVisible(false);
             game.addChild(this.BomRight);
             //Bomup
-            this.BomUp = cc.Sprite.create("res/Bomb/bombbang_up" + this.sizebom + ".png");
+            this.BomUp = cc.Sprite.create("res/Bomb/bombbang_up" + sizebomb + ".png");
             this.BomUp.setAnchorPoint(cc.p(0.5, 0));
-            this.BomUp.setPosition(x, y);
+            this.BomUp.setPosition(x, y-22);
             this.BomUp.setVisible(false);
             game.addChild(this.BomUp);
             //BomDown
-            this.BomDown = cc.Sprite.create("res/Bomb/bombbang_down" + this.sizebom + ".png");
+            this.BomDown = cc.Sprite.create("res/Bomb/bombbang_down" + sizebomb + ".png");
             this.BomDown.setAnchorPoint(cc.p(0.5, 1));
-            this.BomDown.setPosition(x, y);
+            this.BomDown.setPosition(x, y+22);
             this.BomDown.setVisible(false);
             game.addChild(this.BomDown);
         }
@@ -51,7 +55,6 @@ var Bomb = cc.Sprite.extend({
         if (this.active) {
             this.timeBombang += dt;
             if (this.timeBombang > 2) {
-
                 this.bombang();
             }
             if (this.timeBombang > 2.1&& this.timeBombang<3) {
@@ -72,11 +75,11 @@ var Bomb = cc.Sprite.extend({
     },
     bomwave: function (sizebomb, arrMap) {
         var point = this.getPosition();
-
+//left
         var sizeleft = sizebomb;
         var rectleft = cc.rect(point.x + 23 - this.BomLeft.getContentSize().width,
             point.y - 10,
-            this.BomLeft.getContentSize().width - 23,
+            this.BomLeft.getContentSize().width-1,
             this.BomLeft.getContentSize().height - 25);
         if (sizeleft > 0) {
             if (this.checkMap(rectleft, arrMap) == false) {
@@ -93,8 +96,8 @@ var Bomb = cc.Sprite.extend({
         }
 //right
         var sizeright = sizebomb;
-        var rectRight = cc.rect(point.x, point.y - 10,
-            this.BomRight.getContentSize().width - 23,
+        var rectRight = cc.rect(point.x-22, point.y - 10,
+            this.BomRight.getContentSize().width-1,
             this.BomRight.getContentSize().height - 25);
         if (sizeright > 0) {
             if (this.checkMap(rectRight, arrMap) == false) {
@@ -114,9 +117,9 @@ var Bomb = cc.Sprite.extend({
         }
         //up
         var sizeup = sizebomb;
-        var rectup = cc.rect(point.x - 10, point.y,
+        var rectup = cc.rect(point.x - 10, point.y-22,
             this.BomUp.getContentSize().width - 25,
-            this.BomUp.getContentSize().height - 23);
+            this.BomUp.getContentSize().height-1);
         if (sizeup > 0) {
             if (this.checkMap(rectup, arrMap) == false) {
 
@@ -137,7 +140,7 @@ var Bomb = cc.Sprite.extend({
         var sizedown = sizebomb;
         var rectDown = cc.rect(point.x - 10, point.y + 23 - this.BomDown.getContentSize().height,
             this.BomDown.getContentSize().width - 25,
-            this.BomDown.getContentSize().height - 23);
+            this.BomDown.getContentSize().height-1);
         if (sizedown > 0) {
 
             if (this.checkMap(rectDown, arrMap) == false) {
@@ -213,21 +216,21 @@ var Bomb = cc.Sprite.extend({
         var point1 = rect.getPosition();
         var rect1 = rect.collideRect(point1);
 
-        var rectleft = cc.rect(point.x+10 - this.BomLeft.getContentSize().width,
+        var rectleft = cc.rect(point.x+22 - this.BomLeft.getContentSize().width,
             point.y - 10,
-            this.BomLeft.getContentSize().width-10,
+            this.BomLeft.getContentSize().width,
             this.BomLeft.getContentSize().height - 25);
 
-        var rectRight = cc.rect(point.x, point.y - 10,
-            this.BomRight.getContentSize().width-10,
+        var rectRight = cc.rect(point.x-22, point.y - 10,
+            this.BomRight.getContentSize().width,
             this.BomRight.getContentSize().height - 25);
 
-        var rectup = cc.rect(point.x - 10, point.y,
+        var rectup = cc.rect(point.x - 10, point.y-22,
             this.BomUp.getContentSize().width - 25,
-            this.BomUp.getContentSize().height-10);
-        var rectDown = cc.rect(point.x - 10, point.y+10 - this.BomDown.getContentSize().height,
+            this.BomUp.getContentSize().height);
+        var rectDown = cc.rect(point.x - 10, point.y+22 - this.BomDown.getContentSize().height,
             this.BomDown.getContentSize().width - 25,
-            this.BomDown.getContentSize().height-10);
+            this.BomDown.getContentSize().height);
 
         if (cc.rectIntersectsRect(rect1, rectleft) || cc.rectIntersectsRect(rect1, rectRight) || cc.rectIntersectsRect(rect1, rectup) || cc.rectIntersectsRect(rect1, rectDown)) {
             return false;

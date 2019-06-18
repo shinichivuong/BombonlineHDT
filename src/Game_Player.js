@@ -5,10 +5,12 @@ var Player = cc.Sprite.extend({
     speedY: 0,
     MaxBomb: 1,
     BombSize: 1,
-    Kim:5,
+    Kim: 5,
     pointDemo: null,
     Live: 5,
     Score: 0,
+    popUp : null,
+    activePopup: false,
     ctor: function (x, y) {
         this._super();
         cc.associateWithNative(this, cc.Sprite);
@@ -16,7 +18,10 @@ var Player = cc.Sprite.extend({
         this.setAnchorPoint(cc.p(0.5, 0.5));
         this.setPosition(cc.p(x, y));
         this.setLocalZOrder(2);
+        this.popUp = this.pressZ(x - 220, y - 50);
+        this.addChild(this.popUp);
         this.scheduleUpdate();
+
     },
     die: function () {
         this.setVisible(false);
@@ -27,7 +32,13 @@ var Player = cc.Sprite.extend({
         return cc.rect(p.x + 5 - a.width / 2, p.y - a.height / 2, a.width - 10, a.width - 15);
     },
     update: function (dt) {
-        if (this.active){
+        if (this.activePopup){
+            this.popUp.setVisible(true);
+        }
+        if (this.activePopup==false){
+            this.popUp.setVisible(false);
+        }
+        if (this.active) {
             if (KEYS[cc.KEY.up]) {
                 this.speedY = 1
                 this.speedX = 0
@@ -58,10 +69,10 @@ var Player = cc.Sprite.extend({
 
         }
         if (KEYS[cc.KEY.z]) {
-            if (this.active==false){
+            if (this.active == false) {
                 this.useKim();
-                KEYS[cc.KEY.z]=false;
-                this.Kim-=1;
+                KEYS[cc.KEY.z] = false;
+                this.Kim -= 1;
 
             }
 
@@ -75,11 +86,93 @@ var Player = cc.Sprite.extend({
         var yK = y_sprite;
         var xR = x_sprite + this.speedX * this.speed;
         var yR = y_sprite + this.speedY * this.speed;
-        this.pointDemo = cc.p(xR, yR)
+        this.pointDemo = cc.p(xR, yR);
         if (this.checkMap() == false) {
-            xR = xK;
-            yR = yK;
+            // xR = xK;
+            // yR = yK;
+            if (this.speedY == 1 || this.speedY == -1) {
+                for (var i = 0; i < arrMap1s.length; i++) {
+                    if (arrMap1s[i].visible) {
+                        var rectMap = arrMap1s[i].collideRect(arrMap1s[i].getPosition());
+                        if (cc.rectIntersectsRect(this.collideRect(new cc.p(xR, yR)), rectMap)) {
+
+                            var point = arrMap1s[i].getPosition();
+                            var rectleft = arrMap1s[i].collideRect(new cc.p(point.x - 45, point.y));
+                            var rectright = arrMap1s[i].collideRect(new cc.p(point.x + 45, point.y));
+                            if (point.x - xR > 20) {
+                                if (this.checkMaptoMve(rectleft) == false) {
+
+                                    xR = xR - 1;
+                                    yR = yK;
+                                }
+                                else {
+                                    xR = xK;
+                                    yR = yK;
+                                }
+                            }
+                            else if (point.x - xR < -20) {
+                                if (this.checkMaptoMve(rectright) == false) {
+                                    xR = xR + 1;
+                                    yR = yK;
+                                }
+                                else {
+                                    xR = xK;
+                                    yR = yK;
+                                }
+                            }
+                            else {
+                                xR = xK;
+                                yR = yK
+                            }
+                        }
+                    }
+                }
+            }
+            else if (this.speedX == 1 || this.speedX == -1) {
+                for (var i = 0; i < arrMap1s.length; i++) {
+                    if (arrMap1s[i].visible) {
+                        var rectMap = arrMap1s[i].collideRect(arrMap1s[i].getPosition());
+                        if (cc.rectIntersectsRect(this.collideRect(new cc.p(xR, yR)), rectMap)) {
+
+                            var point = arrMap1s[i].getPosition();
+                            var rectleft = arrMap1s[i].collideRect(new cc.p(point.x, point.y - 45));
+                            var rectright = arrMap1s[i].collideRect(new cc.p(point.x, point.y + 45));
+                            if (point.y - yR > 2) {
+                                if (this.checkMaptoMve(rectleft) == false) {
+
+                                    xR = xK;
+                                    yR = yR - 1;
+                                }
+                                else {
+                                    xR = xK;
+                                    yR = yK;
+                                }
+                            }
+                            else if (point.y - yR < -30) {
+                                if (this.checkMaptoMve(rectright) == false) {
+                                    xR = xK;
+                                    yR = yR + 1;
+                                }
+                                else {
+                                    xR = xK;
+                                    yR = yK;
+                                }
+                            }
+                            else {
+                                xR = xK;
+                                yR = yK
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                xR = xK;
+                yR = yK;
+            }
         }
+        //dang code
+
         //dang code
         this.setPosition(cc.p(xR, yR));
     },
@@ -96,16 +189,40 @@ var Player = cc.Sprite.extend({
         }
         return true;
     },
+    checkMaptoMve: function (rectinput) {
+        for (var i = 0; i < arrMap1s.length; i++) {
+            if (arrMap1s[i].visible) {
+                var map = arrMap1s[i].getPosition();
+                var rect = arrMap1s[i].collideRect(map);
+                if (cc.rectIntersectsRect(rectinput, rect)) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    },
     saxNuoc: function () {
         this.setTexture(res.SaxNuoc_png);
-        this.active=false;
+        this.active = false;
+        this.activePopup = true;
     },
-    useKim:function () {
-        this.active=true;
+    useKim: function () {
+        this.active = true;
         this.setOpacity(0);
         this.setTexture(res.BebongDown_png);
         var BossDie = cc.FadeIn.create(0.3);
         this.runAction(BossDie);
+        this.activePopup=false;
+    },
+    pressZ: function (x, y) {
+        var popUpSax = new cc.LabelTTF("Press Z");
+        popUpSax.setFontSize(15);
+        popUpSax.setPosition(cc.p(x, y));
+        popUpSax.setVisible(false);
+        return popUpSax;
+
+
     },
     changePointX: function (x) {
         var n = (x - 70) % 45;
