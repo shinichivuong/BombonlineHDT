@@ -11,10 +11,12 @@ var Player = cc.Sprite.extend({
     Score: 0,
     popUp : null,
     activePopup: false,
-    ctor: function (x, y) {
+    dataUser:null,
+    ctor: function (x, y,dataUser) {
+        this.dataUser=dataUser;
         this._super();
         cc.associateWithNative(this, cc.Sprite);
-        this.initWithFile(res.BebongDown_png);
+        this.initWithFile(this.dataUser[0]);
         this.setAnchorPoint(cc.p(0.5, 0.5));
         this.setPosition(cc.p(x, y));
         this.setLocalZOrder(2);
@@ -42,23 +44,23 @@ var Player = cc.Sprite.extend({
             if (KEYS[cc.KEY.up]) {
                 this.speedY = 1
                 this.speedX = 0
-                this.setTexture(res.BeBongUp_png)
+                this.setTexture(this.dataUser[3])
             }
             else if (KEYS[cc.KEY.down]) {
                 this.speedY = -1
                 this.speedX = 0
-                this.setTexture(res.BebongDown_png)
+                this.setTexture(this.dataUser[0])
             }
             else this.speedY = 0;
             if (KEYS[cc.KEY.left]) {
                 this.speedX = -1;
                 this.speedY = 0
-                this.setTexture(res.BeBongLeft_png)
+                this.setTexture(this.dataUser[1])
             }
             else if (KEYS[cc.KEY.right]) {
                 this.speedX = 1;
                 this.speedY = 0
-                this.setTexture(res.BebongRight_png)
+                this.setTexture(this.dataUser[2])
             }
             else this.speedX = 0;
 

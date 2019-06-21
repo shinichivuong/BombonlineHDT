@@ -1,9 +1,18 @@
 var GameLayer = cc.Layer.extend({
     die: false,
     winlose: false,
-    ctor: function () {
+    _dataUser: null,   //du lieu nguoi choi da chon cho nhan vat.
+    _userName: null,
+    _player: null, //xac dinh nhan vat trong game
+    _boss: null,   // doi tuong boss trong game
+    _background: null, //doi tuong background trong game
+    _scorePlayer: [],
+    ctor: function (userName, dataUser) {
+        this._userName = userName;
+        this._dataUser = dataUser;
         this._super();
         this.init();
+
     },
     init: function () {
         var size = cc.director.getWinSize();
@@ -49,14 +58,11 @@ var GameLayer = cc.Layer.extend({
         }
         realMap(this);
         creatCrepp(this);
-        // creatItem(this);
         creatRandomItem(this);
-        this._player = new Player(250, 120,this);
+        this._player = new Player(250, 120, this._dataUser);
         this.addChild(this._player);
-        // this.addChild(this._player.pressZ(this._player.getPosition()));
 
-
-        this._score = new LayerScore();
+        this._score = new LayerScore(this._userName);
         this.addChild(this._score);
 
         this._boss = new Boss(475, 409);
@@ -70,6 +76,7 @@ var GameLayer = cc.Layer.extend({
         cancel.y = 50;
         cancel.addTouchEventListener(this.touchExit, this);
         this.addChild(cancel);
+        this.creatAvatarPlayer();
 
         this.scheduleUpdate();
     },
@@ -95,15 +102,16 @@ var GameLayer = cc.Layer.extend({
                 this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
                 this.winlose.activelose = true;
                 this.winlose = true;
-                // var scene = new GameMenuHighScore;
-                // cc.director.pushScene(new cc.TransitionFade(5, scene));
             }
             if (this._player.Live == 0) {
                 this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
                 this.winlose.activelose = true;
                 this.winlose = true;
-                // var scene = new GameMenuHighScore;
-                // cc.director.pushScene(new cc.TransitionFade(5, scene));
+                gameOverNow = false;
+                this._scorePlayer.push(this._player.Score);
+                var scene = new GameMenuHighScore(this._scorePlayer);
+                cc.director.pushScene(new cc.TransitionFade(10, scene));
+
             }
             for (var i = 0; i < arrCreeps.length; i++) {
                 arrCreeps[i].update(dt);
@@ -156,12 +164,12 @@ var GameLayer = cc.Layer.extend({
                 }
             }
             //playercheckdie
-            for (var i=0;i<arrCreeps.length;i++){
-                if (arrCreeps[i].active){
-                    if (this.collide(this._player,arrCreeps[i])){
-                        this._player.Live-=1;
+            for (var i = 0; i < arrCreeps.length; i++) {
+                if (arrCreeps[i].active) {
+                    if (this.collide(this._player, arrCreeps[i])) {
+                        this._player.Live -= 1;
                         this._player.setOpacity(0);
-                        this._player.setPosition(340,120);
+                        this._player.setPosition(340, 120);
                         var BossDie = cc.FadeIn.create(1);
                         this._player.runAction(BossDie);
                     }
@@ -179,7 +187,8 @@ var GameLayer = cc.Layer.extend({
                             this._player.MaxBomb += 1;
                         }
                         if (arrItems[i].getTag() == 3) {
-                            if (this._player.BombSize<=10);{
+                            if (this._player.BombSize <= 10) ;
+                            {
                                 this._player.BombSize += 1;
                             }
 
@@ -248,9 +257,25 @@ var GameLayer = cc.Layer.extend({
         var aRect = a.collideRect(pos1);
         var bRect = b.collideRect(pos2);
         return cc.rectIntersectsRect(aRect, bRect);
+    },
+    creatAvatarPlayer: function () {
+        var avtPlayer = new cc.Sprite();
+        avtPlayer.setAnchorPoint(cc.p(0.5, 0.5));
+        avtPlayer.setPosition(1020, 505);
+        avtPlayer.setScale(0.4);
+        if (this._dataUser == khokhos) {
+            avtPlayer.setTexture(res.khoKho1_png);
+        }
+        if (this._dataUser == bebongs) {
+            avtPlayer.setTexture(res.AvtBeBong1_png);
+        }
+        if (this._dataUser == tiachops) {
+            avtPlayer.setTexture(res.tiachop1_png);
+        }
+        this.addChild(avtPlayer);
     }
 });
-    creatRandomItem = function (game) {
+creatRandomItem = function (game) {
     var count = arrLocalItem.length;
     for (var k = 0; k < 20; k++) {
         var n = Math.floor(Math.random() * count);
@@ -297,11 +322,12 @@ var GameLayer = cc.Layer.extend({
         game.addChild(creep5);
         game.addChild(creep6);
         game.addChild(creep7);
+    }
+var Gamescenes = cc.Scene.extend({
+    ctor: function (userName, userData) {
+        this._super();
+        var layer = new GameLayer(userName, userData);
+        this.addChild(layer);
     },
 
-    GameLayer.scene = function () {
-        var scene = new cc.Scene();
-        var layer = new GameLayer();
-        scene.addChild(layer);
-        return scene;
-    };
+});

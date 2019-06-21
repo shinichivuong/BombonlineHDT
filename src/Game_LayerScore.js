@@ -1,16 +1,18 @@
 var LayerScore = cc.Layer.extend({
-    realTimeLB: null,
-    countBomLB: null,
-    countSpeedLB: null,
-    countKillBossLB: null,
-    countBomSizeLB: null,
+    realTimeLB: null,         // Hàm tính toán thời gian thực
+    countBomLB: null,         //Hàm hiển thị số bomb tối đa có thể dặt
+    countSpeedLB: null,       //Hàm hiển thị tốc độ
+    countKillBossLB: null,    //Hàm hiển thị số điểm kill Boss
+    countBomSizeLB: null,     //Hàm hiển thị độ dài bomb
     userNameLB: null,
     playerLiveLB: null,
     countKim: 5,
     kimLB: null,
     size: null,
     realTime: 0,
-    ctor: function () {
+    userNameData: null,
+    ctor: function (data) {//truyen vao ten nguoi dung
+        this.userNameData = data;
         this._super();
         this.score();
         this.countItemBoom();
@@ -20,6 +22,7 @@ var LayerScore = cc.Layer.extend({
         this.kim();
         this.countKillBoos();
         this.countItemBomSize();
+
 //time
         this.scheduleUpdate();
     },
@@ -42,28 +45,28 @@ var LayerScore = cc.Layer.extend({
         this.countBomLB = new cc.LabelTTF("0");
         this.countBomLB.setFontSize(15);
         this.countBomLB.setPosition(cc.p(1129 - 100, 340));
-        this.countBomLB.setColor(cc.color(255,255,255));
+        this.countBomLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.countBomLB);
     },
     countItemSpeed: function () {
         this.countSpeedLB = new cc.LabelTTF("0");
         this.countSpeedLB.setFontSize(15);
         this.countSpeedLB.setPosition(cc.p(1129 - 100, 300));
-        this.countSpeedLB.setColor(cc.color(255,255,255));
+        this.countSpeedLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.countSpeedLB);
     },
     countItemBomSize: function () {
         this.countBomSizeLB = new cc.LabelTTF("0");
         this.countBomSizeLB.setFontSize(15);
         this.countBomSizeLB.setPosition(cc.p(1129 - 100, 320));
-        this.countBomSizeLB.setColor(cc.color(255,255,255));
+        this.countBomSizeLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.countBomSizeLB);
     },
     userName: function () {
         this.userNameLB = new cc.LabelTTF();
         this.userNameLB.fontName = "Marker Felt";
         this.userNameLB.fontSize = 20;
-        this.userNameLB.setString("thudzai");
+        this.userNameLB.setString(this.userNameData);
         this.userNameLB.setPosition(cc.p(1129 - 100, 570));
         this.addChild(this.userNameLB);
     },
@@ -71,20 +74,20 @@ var LayerScore = cc.Layer.extend({
         this.playerLiveLB = new cc.LabelTTF("5");
         this.playerLiveLB.setFontSize(15);
         this.playerLiveLB.setPosition(cc.p(1129 - 100, 360));
-        this.playerLiveLB.setColor(cc.color(255,255,255));
+        this.playerLiveLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.playerLiveLB);
     },
     kim: function () {
-        var textKim= new cc.LabelTTF("-KIM:");
+        var textKim = new cc.LabelTTF("-KIM:");
         textKim.setFontSize(18);
         textKim.setPosition(cc.p(1129 - 190, 260));
-        textKim.setColor(cc.color(240,230,140));
+        textKim.setColor(cc.color(240, 230, 140));
         this.addChild(textKim);
 
         this.kimLB = new cc.LabelTTF("5");
         this.kimLB.setFontSize(15);
         this.kimLB.setPosition(cc.p(1129 - 100, 260));
-        this.kimLB.setColor(cc.color(255,255,255));
+        this.kimLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.kimLB);
     },
     countKillBoos: function () {
@@ -93,7 +96,7 @@ var LayerScore = cc.Layer.extend({
         this.countKillBossLB = new cc.LabelTTF("0");
         this.countKillBossLB.setFontSize(15);
         this.countKillBossLB.setPosition(cc.p(1129 - 100, 280));
-        this.countKillBossLB.setColor(cc.color(255,255,255));
+        this.countKillBossLB.setColor(cc.color(255, 255, 255));
         this.addChild(this.countKillBossLB);
     },
 });

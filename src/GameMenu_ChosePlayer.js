@@ -1,5 +1,8 @@
-var noChose=null;
 var GameMenuChosePlayer = cc.Layer.extend({
+    dataUser: null,     //Du lieu nhan vat duoc chon
+    userNameGame: null, //Ten nhan vat do nguoi dung nhap
+    noName: null,        //Popup thong bao khi chua ngap ten
+    noChose: null,       //Popup thong bao khi chua chon nhan vat
     ctor: function () {
         this._super();
         var size = cc.director.getWinSize();
@@ -38,7 +41,7 @@ var GameMenuChosePlayer = cc.Layer.extend({
         this.addChild(khokho);
 
         var ok = new ccui.Button();
-        ok.setAnchorPoint(cc.p(0.5,0.5));
+        ok.setAnchorPoint(cc.p(0.5, 0.5));
         ok.x = 800;
         ok.y = 190;
         ok.setTitleText("Okey");
@@ -46,32 +49,31 @@ var GameMenuChosePlayer = cc.Layer.extend({
         ok.addTouchEventListener(this.gameMain, this);
         this.addChild(ok);
 
-        userNameGame= new cc.EditBox(cc.size(150,50));
-        // userNameGame.setPlaceHolderColor(cc.Color.GRAY);
-        userNameGame.setInputMode(cc.KEYBOARD_RETURNTYPE_DEFAULT);
-        userNameGame.setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_SENTENCE);
-        userNameGame.setPosition(800,220);
-        userNameGame.setAnchorPoint(cc.p(0.5,0.5));
-        userNameGame.setFontSize(25);
+        this.userNameGame = new cc.EditBox(cc.size(150, 50));
+        this.userNameGame.setInputMode(cc.KEYBOARD_RETURNTYPE_DEFAULT);
+        this.userNameGame.setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_SENTENCE);
+        this.userNameGame.setPosition(800, 220);
+        this.userNameGame.setAnchorPoint(cc.p(0.5, 0.5));
+        this.userNameGame.setFontSize(25);
 
-        userNameGame.setPlaceHolder("user Name");
-        userNameGame.setPlaceholderFontSize(25);
-        this.addChild(userNameGame);
+        this.userNameGame.setPlaceHolder("user Name");
+        this.userNameGame.setPlaceholderFontSize(25);
+        this.addChild(this.userNameGame);
 
         //canh bao chua nhap ten
-        noName = new cc.LabelTTF("Bạn chưa nhập tên!");
-        noName.setFontSize(15);
-        noName.setVisible(false);
-        noName.setPosition(cc.p(780, 250));
-        noName.setColor(cc.color(0, 0, 0));
-        this.addChild(noName);
+        this.noName = new cc.LabelTTF("Bạn chưa nhập tên!");
+        this.noName.setFontSize(15);
+        this.noName.setVisible(false);
+        this.noName.setPosition(cc.p(780, 250));
+        this.noName.setColor(cc.color(0, 0, 0));
+        this.addChild(this.noName);
         //canh bao chua chon nhan vat
-        noChose = new cc.LabelTTF("Bạn chưa chọn nhân vật kìa!");
-        noChose.setFontSize(15);
-        noChose.setVisible(false);
-        noChose.setPosition(cc.p(700, 450));
-        noChose.setColor(cc.color(0, 0, 0));
-        this.addChild(noChose);
+        this.noChose = new cc.LabelTTF("Bạn chưa chọn nhân vật kìa!");
+        this.noChose.setFontSize(15);
+        this.noChose.setVisible(false);
+        this.noChose.setPosition(cc.p(700, 450));
+        this.noChose.setColor(cc.color(0, 0, 0));
+        this.addChild(this.noChose);
 
         choseMain = new cc.Sprite();
         choseMain.setTexture("");
@@ -84,15 +86,15 @@ var GameMenuChosePlayer = cc.Layer.extend({
 
         switch (type) {
             case ccui.Widget.TOUCH_ENDED:
-                if (userNameGame.getString()==""){
-                    noName.setVisible(true);
+                if (this.userNameGame.getString() == "") {
+                    this.noName.setVisible(true);
                 }
-                else if (choseMain.getTexture()==null){
-                    noChose.setVisible(true);
+                else if (choseMain.getTexture() == null) {
+                    this.noChose.setVisible(true);
                 }
                 else {
-                    var scene = new GameLayer;
-                    cc.director.runScene(new cc.TransitionFade(2,scene));
+                    var scene = new GameLayer(this.userNameGame.getString(),this.dataUser);
+                    cc.director.runScene(new cc.TransitionFade(2, scene));
                     break;
                 }
 
@@ -103,33 +105,33 @@ var GameMenuChosePlayer = cc.Layer.extend({
         switch (type) {
             case ccui.Widget.TOUCH_ENDED:
                 choseMain.setTexture(res.opbebong_png);
-                // arrPlayer=bebongs;
-                avtplayerback=res.bebong1_png;
+                this.dataUser = bebongs;
+                avtplayerback = res.bebong1_png;
                 break;
         }
     },
 
-    touchEvent2:function (sender,type) {
+    touchEvent2: function (sender, type) {
         switch (type) {
             case ccui.Widget.TOUCH_ENDED:
                 choseMain.setTexture(res.optiachop_png);
-                // arrPlayer=tiachops;
-                avtplayerback=res.tiachop1_png;
+                this.dataUser = tiachops;
+                avtplayerback = res.tiachop1_png;
 
                 break;
         }
     },
-    touchEvent3:function (sender,type) {
+    touchEvent3: function (sender, type) {
         switch (type) {
             case ccui.Widget.TOUCH_ENDED:
                 choseMain.setTexture(res.opkhokho_png);
-                // arrPlayer=khokhos;
-                avtplayerback=res.khoKho1_png;
+                this.dataUser = khokhos;
+                avtplayerback = res.khoKho1_png;
 
                 break;
         }
     },
-    touchExit:function (sender,type) {
+    touchExit: function (sender, type) {
         switch (type) {
             case ccui.Widget.TOUCH_ENDED:
                 cc.director.popScene();

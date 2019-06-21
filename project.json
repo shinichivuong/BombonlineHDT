@@ -12,7 +12,7 @@
     "modules" : ["cocos2d","extensions"],
 
     "jsList" : [
-        "src/resource.js",
+        "src/Game_resource.js",
         "src/Game_GameLayer.js",
         "src/Game_Background.js",
         "src/Game_Background.js",
@@ -24,8 +24,10 @@
         "src/Game_Bomb.js",
         "src/Game_Boss.js",
         "src/Game_Player.js",
+        "src/Game_Help.js",
         "src/Game_LayerScore.js",
         "src/Game_Items.js",
+        "src/Game_DataPlayer.js",
         "src/Main.js"
 
     ]
