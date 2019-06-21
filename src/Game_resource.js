@@ -112,7 +112,7 @@ var res = {
 
     Boom_png: "res/bomb.gif",
 
-
+    //btn cancel
     BtnCancel_png: "res/cancel1.png",
     BtnCancel2_png: "res/cancel2.png",
 
