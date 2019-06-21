@@ -7,10 +7,10 @@ var Bomb = cc.Sprite.extend({
     sizebom: 0,
     hitBoss: true,
     active: true,
-    sizeleft:0,
-    sizeright:0,
-    sizeup:0,
-    sizedown:0,
+    sizeleft: 0,
+    sizeright: 0,
+    sizeup: 0,
+    sizedown: 0,
 
     ctor: function (x, y, game, sizebomb) {
         this._super();
@@ -26,25 +26,25 @@ var Bomb = cc.Sprite.extend({
             //bomleft
             this.BomLeft = cc.Sprite.create("res/Bomb/bombbang_left" + sizebomb + ".png");
             this.BomLeft.setAnchorPoint(cc.p(1, 0.5));
-            this.BomLeft.setPosition(x+22, y);
+            this.BomLeft.setPosition(x + 22, y);
             this.BomLeft.setVisible(false);
             game.addChild(this.BomLeft);
             //bỏmight
             this.BomRight = cc.Sprite.create("res/Bomb/bombbang_right" + sizebomb + ".png");
             this.BomRight.setAnchorPoint(cc.p(0, 0.5));
-            this.BomRight.setPosition(x-22, y);
+            this.BomRight.setPosition(x - 22, y);
             this.BomRight.setVisible(false);
             game.addChild(this.BomRight);
             //Bomup
             this.BomUp = cc.Sprite.create("res/Bomb/bombbang_up" + sizebomb + ".png");
             this.BomUp.setAnchorPoint(cc.p(0.5, 0));
-            this.BomUp.setPosition(x, y-22);
+            this.BomUp.setPosition(x, y - 22);
             this.BomUp.setVisible(false);
             game.addChild(this.BomUp);
             //BomDown
             this.BomDown = cc.Sprite.create("res/Bomb/bombbang_down" + sizebomb + ".png");
             this.BomDown.setAnchorPoint(cc.p(0.5, 1));
-            this.BomDown.setPosition(x, y+22);
+            this.BomDown.setPosition(x, y + 22);
             this.BomDown.setVisible(false);
             game.addChild(this.BomDown);
         }
@@ -57,15 +57,15 @@ var Bomb = cc.Sprite.extend({
             if (this.timeBombang > 2) {
                 this.bombang();
             }
-            if (this.timeBombang > 2.1&& this.timeBombang<3) {
+            if (this.timeBombang > 2.1 && this.timeBombang < 3) {
                 this.destroy();
-                this.timeBombang=3;
+                this.timeBombang = 3;
             }
         }
 
     },
     bombang: function () {
-        if (this.active){
+        if (this.active) {
             this.BomLeft.setVisible(true);
             this.BomRight.setVisible(true);
             this.BomUp.setVisible(true);
@@ -79,12 +79,12 @@ var Bomb = cc.Sprite.extend({
         var sizeleft = sizebomb;
         var rectleft = cc.rect(point.x + 23 - this.BomLeft.getContentSize().width,
             point.y - 10,
-            this.BomLeft.getContentSize().width-1,
+            this.BomLeft.getContentSize().width - 1,
             this.BomLeft.getContentSize().height - 25);
         if (sizeleft > 0) {
             if (this.checkMap(rectleft, arrMap) == false) {
                 sizeleft -= 1;
-                if (sizeleft >=1) {
+                if (sizeleft >= 1) {
                     this.BomLeft.setTexture("res/Bomb/bombbang_left" + sizeleft + ".png");
                     this.bomwave(sizeleft, arrMap);
                 }
@@ -96,8 +96,8 @@ var Bomb = cc.Sprite.extend({
         }
 //right
         var sizeright = sizebomb;
-        var rectRight = cc.rect(point.x-22, point.y - 10,
-            this.BomRight.getContentSize().width-1,
+        var rectRight = cc.rect(point.x - 22, point.y - 10,
+            this.BomRight.getContentSize().width - 1,
             this.BomRight.getContentSize().height - 25);
         if (sizeright > 0) {
             if (this.checkMap(rectRight, arrMap) == false) {
@@ -117,9 +117,9 @@ var Bomb = cc.Sprite.extend({
         }
         //up
         var sizeup = sizebomb;
-        var rectup = cc.rect(point.x - 10, point.y-22,
+        var rectup = cc.rect(point.x - 10, point.y - 22,
             this.BomUp.getContentSize().width - 25,
-            this.BomUp.getContentSize().height-1);
+            this.BomUp.getContentSize().height - 1);
         if (sizeup > 0) {
             if (this.checkMap(rectup, arrMap) == false) {
 
@@ -140,7 +140,7 @@ var Bomb = cc.Sprite.extend({
         var sizedown = sizebomb;
         var rectDown = cc.rect(point.x - 10, point.y + 23 - this.BomDown.getContentSize().height,
             this.BomDown.getContentSize().width - 25,
-            this.BomDown.getContentSize().height-1);
+            this.BomDown.getContentSize().height - 1);
         if (sizedown > 0) {
 
             if (this.checkMap(rectDown, arrMap) == false) {
@@ -216,19 +216,19 @@ var Bomb = cc.Sprite.extend({
         var point1 = rect.getPosition();
         var rect1 = rect.collideRect(point1);
 
-        var rectleft = cc.rect(point.x+22 - this.BomLeft.getContentSize().width,
+        var rectleft = cc.rect(point.x + 22 - this.BomLeft.getContentSize().width,
             point.y - 10,
             this.BomLeft.getContentSize().width,
             this.BomLeft.getContentSize().height - 25);
 
-        var rectRight = cc.rect(point.x-22, point.y - 10,
+        var rectRight = cc.rect(point.x - 22, point.y - 10,
             this.BomRight.getContentSize().width,
             this.BomRight.getContentSize().height - 25);
 
-        var rectup = cc.rect(point.x - 10, point.y-22,
+        var rectup = cc.rect(point.x - 10, point.y - 22,
             this.BomUp.getContentSize().width - 25,
             this.BomUp.getContentSize().height);
-        var rectDown = cc.rect(point.x - 10, point.y+22 - this.BomDown.getContentSize().height,
+        var rectDown = cc.rect(point.x - 10, point.y + 22 - this.BomDown.getContentSize().height,
             this.BomDown.getContentSize().width - 25,
             this.BomDown.getContentSize().height);
 

@@ -21,9 +21,6 @@ var LayerScore = cc.Layer.extend({
         this.countKillBoos();
         this.countItemBomSize();
 //time
-
-
-
         this.scheduleUpdate();
     },
     update: function (dt) {
