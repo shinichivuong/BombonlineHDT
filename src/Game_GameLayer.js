@@ -6,7 +6,6 @@ var GameLayer = cc.Layer.extend({
     _player: null, //xac dinh nhan vat trong game
     _boss: null,   // doi tuong boss trong game
     _background: null, //doi tuong background trong game
-    _scorePlayer: [],
     ctor: function (userName, dataUser) {
         this._userName = userName;
         this._dataUser = dataUser;
@@ -99,17 +98,24 @@ var GameLayer = cc.Layer.extend({
             this._score.playerLiveLB.setString(this._player.Live.toString());
             //dieu kien thang
             if (this._boss.active == false) {
-                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
-                this.winlose.activelose = true;
+                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), this._userName, this._player.Score);
+                this.winlose.activewin = true;
                 this.winlose = true;
+                var dataScore= this._userName.toString()+"           "+this._player.Score;
+                arrScorePlayer.push(dataScore);
+                var scene = new GameMenuHighScore();
+                cc.director.pushScene(new cc.TransitionFade(10, scene));
             }
+            //dieu kien thua
             if (this._player.Live == 0) {
-                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), "thudzai", this._player.Score);
+                this._winlose = new LayerWinLose(this, cc.director.getWinSize(), this._userName, this._player.Score);
                 this.winlose.activelose = true;
                 this.winlose = true;
                 gameOverNow = false;
-                this._scorePlayer.push(this._player.Score);
-                var scene = new GameMenuHighScore(this._scorePlayer);
+                // var dataLose= this._userName.
+                var dataScore= this._userName.toString()+"           "+this._player.Score;
+                arrScorePlayer.push(dataScore);
+                var scene = new GameMenuHighScore();
                 cc.director.pushScene(new cc.TransitionFade(10, scene));
 
             }

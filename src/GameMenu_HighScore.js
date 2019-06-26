@@ -1,8 +1,6 @@
 var GameMenuHighScore = cc.Layer.extend({
-    arrHighScores:[],
-    ctor: function (arrHighScore) {  //truyen du lieu diem vao
+    ctor: function () {  //truyen du lieu diem vao
         this._super();
-        this.arrHighScores=arrHighScore;
         var size = cc.director.getWinSize();
         var backHighScore = new cc.Sprite(res.BGHighScore_png);
         backHighScore.setAnchorPoint(cc.p(0.5, 0.5));
@@ -16,8 +14,8 @@ var GameMenuHighScore = cc.Layer.extend({
         cancel.addTouchEventListener(this.touchEvent, this);
         this.addChild(cancel);
 
-        for (var i=0;i<this.arrHighScores.length;i++){
-            var overgame = new cc.LabelTTF(this.arrHighScores[i]);
+        for (var i=0;i<arrScorePlayer.length;i++){
+            var overgame = new cc.LabelTTF(arrScorePlayer[i]);
             overgame.setFontSize(25);
             overgame.setAnchorPoint(cc.p(0, 0.5));
             overgame.setColor(cc.color(0, 0, 0));
