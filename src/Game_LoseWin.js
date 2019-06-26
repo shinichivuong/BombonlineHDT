@@ -1,9 +1,15 @@
 var LayerWinLose = cc.Layer.extend({
     active: false,
-    activewin: false,
-    activelose: false,
+    activewin: false, /*when player win*/
+    activelose: false,/*when player lose*/
 
     ctor: function (game, size, playername, score) {
+        /**
+         * game: gamemain
+         * size: winsize
+         * playername: its player's name
+         * score: Player's score when he die or win
+         */
         cc.audioEngine.playMusic(res.sound_win);
 
         var staticGame = new cc.LabelTTF("GAME OVER");

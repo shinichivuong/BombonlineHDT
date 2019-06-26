@@ -13,6 +13,11 @@ var Bomb = cc.Sprite.extend({
     sizedown: 0,
 
     ctor: function (x, y, game, sizebomb) {
+        /**
+         * x,y: get position of Bomb
+         * game: its gamemain
+         * sizeBomb: size of Player's bomb
+         */
         this._super();
         if (this.active) {
             x = this.changePointX(x);
@@ -65,6 +70,10 @@ var Bomb = cc.Sprite.extend({
 
     },
     bombang: function () {
+        /**
+         * use when bom bang
+
+         */
         if (this.active) {
             this.BomLeft.setVisible(true);
             this.BomRight.setVisible(true);
@@ -74,6 +83,10 @@ var Bomb = cc.Sprite.extend({
 
     },
     bomwave: function (sizebomb, arrMap) {
+        /**
+         * sizebomb: size of Player's bomb
+         * arrmap: its an array, it is all sprite of map
+         */
         var point = this.getPosition();
 //left
         var sizeleft = sizebomb;
@@ -159,15 +172,23 @@ var Bomb = cc.Sprite.extend({
         }
 
     },
-    collideRect: function (p) {
+    createRect: function (p) {
+        /**
+         * create a rectangle of the bomb
+
+         */
         var a = this.getContentSize();
         return cc.rect(p.x + 2 - a.width / 2, p.y + 2 - a.height / 2, a.width - 4, a.width - 4)
     },
     checkMap: function (a, b) {
+        /**
+         * check position of bomb as position of map's box
+
+         */
         for (var i = 0; i < b.length; i++) {
             if (b[i].visible) {
                 var point2 = b[i].getPosition();
-                var rect2 = b[i].collideRect(point2);
+                var rect2 = b[i].createRect(point2);
                 if (cc.rectIntersectsRect(a, rect2)) {
                     return false;
                 }
@@ -177,6 +198,9 @@ var Bomb = cc.Sprite.extend({
 
     },
     destroy: function () {
+        /**
+         * Destroy a bomb.
+         */
         this.setVisible(false);
         this.BomLeft.setVisible(false);
         this.BomRight.setVisible(false);
@@ -214,7 +238,7 @@ var Bomb = cc.Sprite.extend({
     },
     checkbom: function (point, rect) {
         var point1 = rect.getPosition();
-        var rect1 = rect.collideRect(point1);
+        var rect1 = rect.createRect(point1);
 
         var rectleft = cc.rect(point.x + 22 - this.BomLeft.getContentSize().width,
             point.y - 10,

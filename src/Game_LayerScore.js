@@ -1,9 +1,9 @@
 var LayerScore = cc.Layer.extend({
-    realTimeLB: null,         // Hàm tính toán thời gian thực
-    countBomLB: null,         //Hàm hiển thị số bomb tối đa có thể dặt
-    countSpeedLB: null,       //Hàm hiển thị tốc độ
-    countKillBossLB: null,    //Hàm hiển thị số điểm kill Boss
-    countBomSizeLB: null,     //Hàm hiển thị độ dài bomb
+    realTimeLB: null,         // Display time of Game
+    countBomLB: null,         // Max bomb of Player
+    countSpeedLB: null,       //Max speed of Player
+    countKillBossLB: null,    //Player Score when kill boss
+    countBomSizeLB: null,     //Bomb size of Player
     userNameLB: null,
     playerLiveLB: null,
     countKim: 5,
@@ -11,7 +11,12 @@ var LayerScore = cc.Layer.extend({
     size: null,
     realTime: 0,
     userNameData: null,
-    ctor: function (data) {//truyen vao ten nguoi dung
+    ctor: function (data) {
+        /**
+         * Get string value by key, if the key doesn't exist, will return passed default value.
+         * @param key The name of Player.
+
+         */
         this.userNameData = data;
         this._super();
         this.score();
@@ -42,6 +47,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.realTimeLB);
     },
     countItemBoom: function () {
+        /*Display player's bomb can creat in game*/
         this.countBomLB = new cc.LabelTTF("0");
         this.countBomLB.setFontSize(15);
         this.countBomLB.setPosition(cc.p(1129 - 100, 340));
@@ -49,6 +55,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.countBomLB);
     },
     countItemSpeed: function () {
+        /*Display player's speed  in game*/
         this.countSpeedLB = new cc.LabelTTF("0");
         this.countSpeedLB.setFontSize(15);
         this.countSpeedLB.setPosition(cc.p(1129 - 100, 300));
@@ -56,6 +63,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.countSpeedLB);
     },
     countItemBomSize: function () {
+        /*Display player's bomb size in game*/
         this.countBomSizeLB = new cc.LabelTTF("0");
         this.countBomSizeLB.setFontSize(15);
         this.countBomSizeLB.setPosition(cc.p(1129 - 100, 320));
@@ -63,6 +71,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.countBomSizeLB);
     },
     userName: function () {
+        /*Display player's name in game*/
         this.userNameLB = new cc.LabelTTF();
         this.userNameLB.fontName = "Marker Felt";
         this.userNameLB.fontSize = 20;
@@ -71,6 +80,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.userNameLB);
     },
     playerLive: function () {
+        /*Display player's heart in game*/
         this.playerLiveLB = new cc.LabelTTF("5");
         this.playerLiveLB.setFontSize(15);
         this.playerLiveLB.setPosition(cc.p(1129 - 100, 360));
@@ -78,6 +88,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.playerLiveLB);
     },
     kim: function () {
+        /*Display player's kim , it use when player Sax*/
         var textKim = new cc.LabelTTF("-KIM:");
         textKim.setFontSize(18);
         textKim.setPosition(cc.p(1129 - 190, 260));
@@ -91,7 +102,7 @@ var LayerScore = cc.Layer.extend({
         this.addChild(this.kimLB);
     },
     countKillBoos: function () {
-
+        /*Display player's score*/
 
         this.countKillBossLB = new cc.LabelTTF("0");
         this.countKillBossLB.setFontSize(15);

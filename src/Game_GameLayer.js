@@ -1,12 +1,16 @@
 var GameLayer = cc.Layer.extend({
     die: false,
     winlose: false,
-    _dataUser: null,   //du lieu nguoi choi da chon cho nhan vat.
-    _userName: null,
-    _player: null, //xac dinh nhan vat trong game
-    _boss: null,   // doi tuong boss trong game
-    _background: null, //doi tuong background trong game
+    _dataUser: null,   //Player's data when chose figure.
+    _userName: null, // its Player's name
+    _player: null, //its Player
+    _boss: null,   //its Boss
+    _background: null, //game's background
     ctor: function (userName, dataUser) {
+        /**
+         * userName:its Player's name
+         * datauser: Player's data when chose figure.
+         */
         this._userName = userName;
         this._dataUser = dataUser;
         this._super();
@@ -15,12 +19,12 @@ var GameLayer = cc.Layer.extend({
     },
     init: function () {
         var size = cc.director.getWinSize();
-        arrCreeps = [];
+        arrCreeps = []; //array of creeps
         arrBooms = [];
         arrItems = [];
         KEYS = [];
         arrBosss = [];
-        arrLocalItem = [];
+        arrLocalItem = [];// location of items
         arrMaps = [
             [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
             [1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -55,16 +59,16 @@ var GameLayer = cc.Layer.extend({
                     }
                 }, this);
         }
-        realMap(this);
-        creatCrepp(this);
-        creatRandomItem(this);
-        this._player = new Player(250, 120, this._dataUser);
+        realMap(this);// create map
+        creatCrepp(this);// create creep
+        creatRandomItem(this);// create items
+        this._player = new Player(250, 120, this._dataUser);//create player
         this.addChild(this._player);
 
         this._score = new LayerScore(this._userName);
         this.addChild(this._score);
 
-        this._boss = new Boss(475, 409);
+        this._boss = new Boss(475, 409);//creat boss
         this._boss.bossHeart(this);
         this.addChild(this._boss);
         arrBosss.push(this._boss);
@@ -89,45 +93,46 @@ var GameLayer = cc.Layer.extend({
     },
     update: function (dt) {
 
-        if (this.winlose == false) {
+        if (this.winlose == false) {//ít active when player alive and boss alive
             this._score.update(dt);
             this._score.countBomLB.setString(this._player.MaxBomb.toString());
             this._score.countSpeedLB.setString(this._player.speed.toString());
             this._score.countKillBossLB.setString(this._player.Score.toString());
             this._score.kimLB.setString(this._player.Kim.toString());
             this._score.playerLiveLB.setString(this._player.Live.toString());
-            //dieu kien thang
+            //condition win
             if (this._boss.active == false) {
                 this._winlose = new LayerWinLose(this, cc.director.getWinSize(), this._userName, this._player.Score);
                 this.winlose.activewin = true;
                 this.winlose = true;
-                var dataScore= this._userName.toString()+"           "+this._player.Score;
+                var dataScore = this._userName.toString() + "           " + this._player.Score;
                 arrScorePlayer.push(dataScore);
                 var scene = new GameMenuHighScore();
                 cc.director.pushScene(new cc.TransitionFade(10, scene));
             }
-            //dieu kien thua
+            //condition lose
             if (this._player.Live == 0) {
                 this._winlose = new LayerWinLose(this, cc.director.getWinSize(), this._userName, this._player.Score);
                 this.winlose.activelose = true;
                 this.winlose = true;
                 gameOverNow = false;
                 // var dataLose= this._userName.
-                var dataScore= this._userName.toString()+"           "+this._player.Score;
+                var dataScore = this._userName.toString() + "           " + this._player.Score;
                 arrScorePlayer.push(dataScore);
                 var scene = new GameMenuHighScore();
                 cc.director.pushScene(new cc.TransitionFade(10, scene));
 
             }
+            //update creep's move
             for (var i = 0; i < arrCreeps.length; i++) {
                 arrCreeps[i].update(dt);
             }
-            //datBomb
+            //create bomb when press space
             if (KEYS[cc.KEY.space]) {
                 this.creatbomb();
                 KEYS[cc.KEY.space] = false;
             }
-            //update boss
+            //update boss's move
             arrBosss[0].update(dt);
             //update boom
             for (var j = 0; j < arrBooms.length; j++) {
@@ -135,7 +140,7 @@ var GameLayer = cc.Layer.extend({
                 arrBooms[j].bomwave(this._player.BombSize, arrMap1s);
             }
 
-            //phá thùng
+            //destroy box
             for (var k = 0; k < arrMap1s.length; k++) {
                 if (arrMap1s[k].visible && arrMap1s[k].getTag() == 4) {
                     for (var i = 0; i < arrBooms.length; i++) {
@@ -225,7 +230,7 @@ var GameLayer = cc.Layer.extend({
                 }
             }
         }
-        //cap nhat diem
+
 
     },
     creatbomb: function () {
@@ -257,11 +262,11 @@ var GameLayer = cc.Layer.extend({
             }
         }
     },
-    collide: function (a, b) {
+    collide: function (a, b) { //colide of 2 obj
         var pos1 = a.getPosition();
         var pos2 = b.getPosition();
-        var aRect = a.collideRect(pos1);
-        var bRect = b.collideRect(pos2);
+        var aRect = a.createRect(pos1);
+        var bRect = b.createRect(pos2);
         return cc.rectIntersectsRect(aRect, bRect);
     },
     creatAvatarPlayer: function () {

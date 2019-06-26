@@ -62,7 +62,7 @@ var Creep = cc.Sprite.extend({
         }
 
     },
-    collideRect: function (p) {
+    createRect: function (p) {
         var a = this.getContentSize();
         return cc.rect(p.x + 2 - a.width / 2, p.y + 2 - a.height / 2, a.width - 4, a.width - 4)
     },
@@ -70,8 +70,8 @@ var Creep = cc.Sprite.extend({
         for (var i = 0; i < arrMap1s.length; i++) {
             if (arrMap1s[i].length != 0) {
                 var map = arrMap1s[i].getPosition();
-                var rect = arrMap1s[i].collideRect(map);
-                if (cc.rectIntersectsRect(this.collideRect(point), rect)) {
+                var rect = arrMap1s[i].createRect(map);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
@@ -80,8 +80,8 @@ var Creep = cc.Sprite.extend({
         for (var k = 0; k < arrCreeps.length; k++) {
             if (arrCreeps[k].visible == true) {
                 var creep = arrCreeps[k].getPosition();
-                var rect = arrCreeps[k].collideRect(creep);
-                if (cc.rectIntersectsRect(this.collideRect(point), rect)) {
+                var rect = arrCreeps[k].createRect(creep);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
@@ -89,8 +89,8 @@ var Creep = cc.Sprite.extend({
         for (var j = 0; j < arrBooms.length; j++) {
             if (arrBooms[j].visible == true) {
                 var bom = arrBooms[j].getPosition();
-                var rect = arrBooms[j].collideRect(bom);
-                if (cc.rectIntersectsRect(this.collideRect(point), rect)) {
+                var rect = arrBooms[j].createRect(bom);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
@@ -99,6 +99,9 @@ var Creep = cc.Sprite.extend({
     },
 });
 Creep.generateDirection = function () {
+    /**
+     * create a original Direction of creep
+     */
     var v = 45;
     var i = Math.floor((Math.random() * 4));
     switch (i) {

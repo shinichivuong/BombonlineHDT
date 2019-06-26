@@ -1,20 +1,22 @@
 var Boss = cc.Sprite.extend({
-    mytime:0,
-    mytime2:0,
+    mytime: 0,
+    mytime2: 0,
     active: true,
     heart: null,
-    speedBoss:1,
-    countHeartBoss:10,
-    point:null,
-    arrheart:[],
+    speedBoss: 1,
+    countHeartBoss: 10,
+    point: null,
+    arrheart: [],
     ctor: function (x, y) {
-
+        /**
+         x,y: position of boss
+         */
         this._super();
-        cc.associateWithNative(this,cc.Sprite);
+        cc.associateWithNative(this, cc.Sprite);
         this.initWithFile(res.BigBossDown_png);
-        this.setAnchorPoint(cc.p(0.5,0.5));
+        this.setAnchorPoint(cc.p(0.5, 0.5));
         this.setLocalZOrder(2);
-        this.setPosition(new cc.p(x,y));
+        this.setPosition(new cc.p(x, y));
 
     },
     destroy: function () {
@@ -22,8 +24,8 @@ var Boss = cc.Sprite.extend({
         this.active = false;
     },
     update: function (dt) {
-        this.mytime+=dt;
-        if (this.mytime-this.mytime2>this.speedBoss) {
+        this.mytime += dt;
+        if (this.mytime - this.mytime2 > this.speedBoss) {
             var huong = Boss.generateDirection();
             var pos = this.getPosition();
             var skipeX = pos.x;
@@ -58,7 +60,7 @@ var Boss = cc.Sprite.extend({
                 this.runAction(action_move);
                 this.mytime2 = this.mytime;
                 for (var i = 0; i < this.arrheart.length; i++) {
-                    var actionheart = new cc.MoveTo(this.speedBoss, cc.p(point.x-this.getContentSize().width/3+i*10,point.y+90));
+                    var actionheart = new cc.MoveTo(this.speedBoss, cc.p(point.x - this.getContentSize().width / 3 + i * 10, point.y + 90));
                     this.arrheart[i].runAction(actionheart);
                 }
             }
@@ -66,47 +68,51 @@ var Boss = cc.Sprite.extend({
 
         }
     },
-    collideRect:function (p) {
-        var a=this.getContentSize();
-        return cc.rect(p.x+2-a.width/2,p.y+2-a.height/2,a.width-4,a.width-4)
+    createRect: function (p) {
+        /**
+         * Create a rectangle of boss
+
+         */
+        var a = this.getContentSize();
+        return cc.rect(p.x + 2 - a.width / 2, p.y + 2 - a.height / 2, a.width - 4, a.width - 4)
     },
-    checkmap:function () {
-        for (var i=0;i<arrMap1s.length;i++){
-            if (arrMap1s[i].length!=0){
-                var map= arrMap1s[i].getPosition();
-                var rect= arrMap1s[i].collideRect(map);
-                if (cc.rectIntersectsRect(this.collideRect(point),rect)){
+    checkmap: function () {
+        for (var i = 0; i < arrMap1s.length; i++) {
+            if (arrMap1s[i].length != 0) {
+                var map = arrMap1s[i].getPosition();
+                var rect = arrMap1s[i].createRect(map);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
 
         }
-        for (var k=0;k<arrCreeps.length;k++){
-            if (arrCreeps[k].visible==true){
-                var creep=arrCreeps[k].getPosition();
-                var rect=arrCreeps[k].collideRect(creep);
-                if (cc.rectIntersectsRect(this.collideRect(point),rect)){
+        for (var k = 0; k < arrCreeps.length; k++) {
+            if (arrCreeps[k].visible == true) {
+                var creep = arrCreeps[k].getPosition();
+                var rect = arrCreeps[k].createRect(creep);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
         }
-        for (var j=0;j<arrBooms.length;j++){
-            if (arrBooms[j].visible==true){
-                var bom=arrBooms[j].getPosition();
-                var rect=arrBooms[j].collideRect(bom);
-                if (cc.rectIntersectsRect(this.collideRect(point),rect)){
+        for (var j = 0; j < arrBooms.length; j++) {
+            if (arrBooms[j].visible == true) {
+                var bom = arrBooms[j].getPosition();
+                var rect = arrBooms[j].createRect(bom);
+                if (cc.rectIntersectsRect(this.createRect(point), rect)) {
                     return false;
                 }
             }
         }
         return true;
     },
-    bossHeart : function (game) {
+    bossHeart: function (game) {
         for (var i = 0; i < this.countHeartBoss; i++) {
             this.heart = new cc.Sprite(res.BigBossHeart_png);
             this.heart.setAnchorPoint(cc.p(0.5, 0.5));
             this.heart.setLocalZOrder(2);
-            this.heart.setPosition(this.getPosition().x-this.getContentSize().width/3+i*10,this.getPosition().y+90);
+            this.heart.setPosition(this.getPosition().x - this.getContentSize().width / 3 + i * 10, this.getPosition().y + 90);
             game.addChild(this.heart);
             this.arrheart.push(this.heart);
         }
@@ -114,7 +120,10 @@ var Boss = cc.Sprite.extend({
 
 });
 Boss.generateDirection = function () {
-    var v=45;
+    /**
+     * create a original Direction of boss
+     */
+    var v = 45;
     var i = Math.floor((Math.random() * 4));
     switch (i) {
         case 0:

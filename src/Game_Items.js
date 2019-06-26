@@ -29,7 +29,7 @@ var Items= cc.Sprite.extend({
         }
         return a;
     },
-    collideRect: function (p) {
+    createRect: function (p) {
         var a = this.getContentSize();
         return cc.rect(p.x + 2 - a.width / 2, p.y + 2 - a.height / 2, a.width - 4, a.width - 4)
     },

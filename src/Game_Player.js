@@ -13,6 +13,9 @@ var Player = cc.Sprite.extend({
     activePopup: false,
     dataUser:null,
     ctor: function (x, y,dataUser) {
+        /**
+         * x,y: player's position
+         * dataUser: player's data when you chose in Game_ChosePlayer*/
         this.dataUser=dataUser;
         this._super();
         cc.associateWithNative(this, cc.Sprite);
@@ -29,7 +32,7 @@ var Player = cc.Sprite.extend({
         this.setVisible(false);
         this.active = false;
     },
-    collideRect: function (p) {
+    createRect: function (p) {
         var a = this.getContentSize();
         return cc.rect(p.x + 5 - a.width / 2, p.y - a.height / 2, a.width - 10, a.width - 15);
     },
@@ -95,12 +98,12 @@ var Player = cc.Sprite.extend({
             if (this.speedY == 1 || this.speedY == -1) {
                 for (var i = 0; i < arrMap1s.length; i++) {
                     if (arrMap1s[i].visible) {
-                        var rectMap = arrMap1s[i].collideRect(arrMap1s[i].getPosition());
-                        if (cc.rectIntersectsRect(this.collideRect(new cc.p(xR, yR)), rectMap)) {
+                        var rectMap = arrMap1s[i].createRect(arrMap1s[i].getPosition());
+                        if (cc.rectIntersectsRect(this.createRect(new cc.p(xR, yR)), rectMap)) {
 
                             var point = arrMap1s[i].getPosition();
-                            var rectleft = arrMap1s[i].collideRect(new cc.p(point.x - 45, point.y));
-                            var rectright = arrMap1s[i].collideRect(new cc.p(point.x + 45, point.y));
+                            var rectleft = arrMap1s[i].createRect(new cc.p(point.x - 45, point.y));
+                            var rectright = arrMap1s[i].createRect(new cc.p(point.x + 45, point.y));
                             if (point.x - xR > 20) {
                                 if (this.checkMaptoMve(rectleft) == false) {
 
@@ -133,12 +136,12 @@ var Player = cc.Sprite.extend({
             else if (this.speedX == 1 || this.speedX == -1) {
                 for (var i = 0; i < arrMap1s.length; i++) {
                     if (arrMap1s[i].visible) {
-                        var rectMap = arrMap1s[i].collideRect(arrMap1s[i].getPosition());
-                        if (cc.rectIntersectsRect(this.collideRect(new cc.p(xR, yR)), rectMap)) {
+                        var rectMap = arrMap1s[i].createRect(arrMap1s[i].getPosition());
+                        if (cc.rectIntersectsRect(this.createRect(new cc.p(xR, yR)), rectMap)) {
 
                             var point = arrMap1s[i].getPosition();
-                            var rectleft = arrMap1s[i].collideRect(new cc.p(point.x, point.y - 45));
-                            var rectright = arrMap1s[i].collideRect(new cc.p(point.x, point.y + 45));
+                            var rectleft = arrMap1s[i].createRect(new cc.p(point.x, point.y - 45));
+                            var rectright = arrMap1s[i].createRect(new cc.p(point.x, point.y + 45));
                             if (point.y - yR > 2) {
                                 if (this.checkMaptoMve(rectleft) == false) {
 
@@ -179,11 +182,12 @@ var Player = cc.Sprite.extend({
         this.setPosition(cc.p(xR, yR));
     },
     checkMap: function () {
+        /*check collision between player and map*/
         for (var i = 0; i < arrMap1s.length; i++) {
             if (arrMap1s[i].visible) {
                 var map = arrMap1s[i].getPosition();
-                var rect = arrMap1s[i].collideRect(map);
-                if (cc.rectIntersectsRect(this.collideRect(this.pointDemo), rect)) {
+                var rect = arrMap1s[i].createRect(map);
+                if (cc.rectIntersectsRect(this.createRect(this.pointDemo), rect)) {
                     return false;
                 }
             }
@@ -195,7 +199,7 @@ var Player = cc.Sprite.extend({
         for (var i = 0; i < arrMap1s.length; i++) {
             if (arrMap1s[i].visible) {
                 var map = arrMap1s[i].getPosition();
-                var rect = arrMap1s[i].collideRect(map);
+                var rect = arrMap1s[i].createRect(map);
                 if (cc.rectIntersectsRect(rectinput, rect)) {
                     return false;
                 }
@@ -204,7 +208,7 @@ var Player = cc.Sprite.extend({
         }
         return true;
     },
-    saxNuoc: function () {
+    saxNuoc: function () {/*when player's collision with bomb */
         this.setTexture(res.SaxNuoc_png);
         this.active = false;
         this.activePopup = true;
