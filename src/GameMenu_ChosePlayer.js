@@ -93,7 +93,7 @@ var GameMenuChosePlayer = cc.Layer.extend({
                     this.noChose.setVisible(true);
                 }
                 else {
-                    var scene = new GameLayer(this.userNameGame.getString(),this.dataUser);
+                    var scene = new GameLayer(this.userNameGame.getString(), this.dataUser);
                     cc.director.runScene(new cc.TransitionFade(2, scene));
                     break;
                 }

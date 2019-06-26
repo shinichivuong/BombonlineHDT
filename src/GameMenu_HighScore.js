@@ -14,12 +14,12 @@ var GameMenuHighScore = cc.Layer.extend({
         cancel.addTouchEventListener(this.touchEvent, this);
         this.addChild(cancel);
 
-        for (var i=0;i<arrScorePlayer.length;i++){
+        for (var i = 0; i < arrScorePlayer.length; i++) {
             var overgame = new cc.LabelTTF(arrScorePlayer[i]);
             overgame.setFontSize(25);
             overgame.setAnchorPoint(cc.p(0, 0.5));
             overgame.setColor(cc.color(0, 0, 0));
-            overgame.setPosition(cc.p(300, 500-30*i));
+            overgame.setPosition(cc.p(300, 500 - 30 * i));
             this.addChild(overgame);
         }
     },
@@ -29,8 +29,8 @@ var GameMenuHighScore = cc.Layer.extend({
             case ccui.Widget.TOUCH_BEGAN:
                 break;
             case ccui.Widget.TOUCH_ENDED:
-                var scene= new HelloWorldLayer;
-                cc.director.pushScene(new cc.TransitionFade(1,scene));
+                var scene = new HelloWorldLayer;
+                cc.director.pushScene(new cc.TransitionFade(1, scene));
                 break;
         }
     }

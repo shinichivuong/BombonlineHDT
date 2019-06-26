@@ -1,7 +1,7 @@
 var LayerWinLose = cc.Layer.extend({
     active: false,
     activewin: false, /*when player win*/
-    activelose: false,/*when player lose*/
+    activelose: false, /*when player lose*/
 
     ctor: function (game, size, playername, score) {
         /**

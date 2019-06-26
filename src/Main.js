@@ -46,21 +46,21 @@ var HelloWorldLayer = cc.Layer.extend({
     }
 });
 var play = function () {
-    var scene= new GameMenuChosePlayer;
-    cc.director.pushScene(new cc.TransitionFade(1,scene));
+    var scene = new GameMenuChosePlayer;
+    cc.director.pushScene(new cc.TransitionFade(1, scene));
 }
 var hightscore = function () {
-    var arr=[];
-    var scene= new GameMenuHighScore(arr);
-    cc.director.pushScene(new cc.TransitionFade(1,scene));
+    var arr = [];
+    var scene = new GameMenuHighScore(arr);
+    cc.director.pushScene(new cc.TransitionFade(1, scene));
 }
 var exit = function () {
-    var scene= new GameMenuChosePlayer;
+    var scene = new GameMenuChosePlayer;
     cc.director.pushScene(scene);
 }
 var option = function () {
-    var scene= new GameHelp;
-    cc.director.pushScene(new cc.TransitionFade(1,scene));
+    var scene = new GameHelp;
+    cc.director.pushScene(new cc.TransitionFade(1, scene));
 }
 var HelloWorldScene = cc.Scene.extend({
     onEnter: function () {

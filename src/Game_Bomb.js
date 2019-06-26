@@ -1,16 +1,16 @@
 var Bomb = cc.Sprite.extend({
-    BomLeft: null,
-    BomRight: null,
-    BomUp: null,
-    BomDown: null,
-    timeBombang: 0,
-    sizebom: 0,
+    BomLeft: null, /*bomb bang left*/
+    BomRight: null, /*bomb bang right*/
+    BomUp: null, /*bomb bang up*/
+    BomDown: null, /*bomb bang down*/
+    timeBombang: 0, /*time when bombang*/
+    sizebom: 0, /*bom's size*/
     hitBoss: true,
-    active: true,
-    sizeleft: 0,
-    sizeright: 0,
-    sizeup: 0,
-    sizedown: 0,
+    active: true, /*bomb's active*/
+    sizeleft: 0, /*size bombleft*/
+    sizeright: 0, /*size bombright*/
+    sizeup: 0, /*size bombup*/
+    sizedown: 0, /*size bombdown*/
 
     ctor: function (x, y, game, sizebomb) {
         /**

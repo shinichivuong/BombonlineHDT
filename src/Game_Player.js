@@ -9,14 +9,14 @@ var Player = cc.Sprite.extend({
     pointDemo: null,
     Live: 5,
     Score: 0,
-    popUp : null,
+    popUp: null,
     activePopup: false,
-    dataUser:null,
-    ctor: function (x, y,dataUser) {
+    dataUser: null,
+    ctor: function (x, y, dataUser) {
         /**
          * x,y: player's position
          * dataUser: player's data when you chose in Game_ChosePlayer*/
-        this.dataUser=dataUser;
+        this.dataUser = dataUser;
         this._super();
         cc.associateWithNative(this, cc.Sprite);
         this.initWithFile(this.dataUser[0]);
@@ -37,10 +37,10 @@ var Player = cc.Sprite.extend({
         return cc.rect(p.x + 5 - a.width / 2, p.y - a.height / 2, a.width - 10, a.width - 15);
     },
     update: function (dt) {
-        if (this.activePopup){
+        if (this.activePopup) {
             this.popUp.setVisible(true);
         }
-        if (this.activePopup==false){
+        if (this.activePopup == false) {
             this.popUp.setVisible(false);
         }
         if (this.active) {
@@ -219,7 +219,7 @@ var Player = cc.Sprite.extend({
         this.setTexture(res.BebongDown_png);
         var BossDie = cc.FadeIn.create(0.3);
         this.runAction(BossDie);
-        this.activePopup=false;
+        this.activePopup = false;
     },
     pressZ: function (x, y) {
         var popUpSax = new cc.LabelTTF("Press Z");
